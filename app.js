@@ -5,6 +5,7 @@ const todoList = document.querySelector('.todo-list');
 const filterOption = document.querySelector('.filter-todo')
 
 //Event Listeners
+document.addEventListener('DOMContentLoaded', getTodos)
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('change', filterTodo)
@@ -86,14 +87,60 @@ function filterTodo(e){
     })
 }
 
-function saveLocalTodos(todo){
+function localCheck(){
     //check local storage to see if we already have todos
     let todos;
+    //if we don't, create and array
     if(localStorage.getItem('todos') === null){
         todos = [];
+    //if we do, parse the JSON and return our array
     }else{
         todos = JSON.parse(localStorage.getItem('todos'));
     }
+    return todos;
+}
+
+function saveLocalTodos(todo){
+    let todos = localCheck()
+    //add a new object to the array and save the array back in local storage as JSON
     todos.push(todo);
     localStorage.setItem('todos', JSON.stringify(todos));
 }    
+
+function getTodos(){
+    let todos = localCheck()
+    todos.forEach(function(todo){
+    //todo DIV
+    const todoDiv = document.createElement('div');
+    todoDiv.classList.add('todo');
+    //create li
+    const newTodo = document.createElement('li');
+    newTodo.innerText = todo;
+    newTodo.classList.add('todo-item')
+    //
+    todoDiv.appendChild(newTodo);
+    //check button
+    const checkButton = document.createElement('button');
+    checkButton.innerHTML = '<i class="fas fa-check"></i>';
+    checkButton.classList.add('complete-btn');
+    todoDiv.appendChild(checkButton)
+    //trash button
+    const trashButton = document.createElement('button');
+    trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+    trashButton.classList.add('trash-btn');
+    todoDiv.appendChild(trashButton)
+    //append to list
+    todoList.appendChild(todoDiv);
+    })
+}
+
+function removeLocalTodos(todo){
+    let todos = localCheck()
+    //if we don't, create and array
+    if(localStorage.getItem('todos') === null){
+        todos = [];
+    //if we do, parse the JSON and return our array
+    }else{
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+}
