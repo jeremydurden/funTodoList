@@ -50,6 +50,7 @@ function deleteCheck(e){
         const todo = item.parentElement;
         //Animation
         todo.classList.add('fall')
+        removeLocalTodos(todo);
         todo.addEventListener('transitionend', function(){
             todo.remove();
         })
@@ -143,4 +144,9 @@ function removeLocalTodos(todo){
     }else{
         todos = JSON.parse(localStorage.getItem('todos'));
     }
+    //get the inner text for the todo we click on and use that text to splice 1 from the array
+    const todoIndex = todo.children[0].innerText
+    todos.splice(todos.indexOf(todoIndex), 1)
+    //save the new array back into local storage after splicing ("deleting") the todo we trashed
+    localStorage.setItem('todos', JSON.stringify(todos));
 }
